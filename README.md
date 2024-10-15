@@ -1,11 +1,5 @@
-# My own redis
+# Source
 
-In this project I craft from scratch my own working version of redis
+- Beej's Network Programming: https://beej.us/guide/bgnet/html/
 
-```mermaid
-  sequenceDiagram
-    Client->>Server: Request
-    alt
-    Server->>Client: Response
-    end
-```
+# Notes
