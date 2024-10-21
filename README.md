@@ -18,5 +18,5 @@
 ## IP Adresses
 
 - IPV4, 4 bytes, 0 to 255, 192.234.1.76
-- we quickly ran about of thems
+- we quickly ran about of thems but remediate by using NAT (Network Adress Translation)
 - so IPV6 was born anf offer 79 MILLION BILLION TRILLION
