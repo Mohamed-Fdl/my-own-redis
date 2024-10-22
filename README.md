@@ -48,7 +48,7 @@ struct addrinfo {
 
 ```
 
-- the socket adress info for ipv4 looks like that
+- the socket adress info for ipv4 looks like that: AF_INET
 
 ```
 struct sockaddr_in {
@@ -64,7 +64,7 @@ struct in_addr {
 
 ```
 
-- the socket adress info for ipv6 looks like that
+- the socket adress info for ipv6 looks like that: AF_INET6
 
 ```
 struct sockaddr_in6 {
@@ -78,5 +78,30 @@ struct sockaddr_in6 {
 struct in6_addr {
     unsigned char   s6_addr[16];   // IPv6 address
 };
+
+```
+
+- there is a structure that can hold informations about both ipv4 & ipv6: sockaddr_storage
+
+```
+struct sockaddr_storage {
+    sa_family_t  ss_family;     // address family
+
+    // all this is padding, implementation specific, ignore it:
+    char      __ss_pad1[_SS_PAD1SIZE];
+    int64_t   __ss_align;
+    char      __ss_pad2[_SS_PAD2SIZE];
+};
+
+```
+
+- we can convert an ipv4 or ipv6 adress respectively to sin_addr and sin6_addr by using this function : inet_pton()
+
+```
+struct sockaddr_in sa; // IPv4
+struct sockaddr_in6 sa6; // IPv6
+
+inet_pton(AF_INET, "10.12.110.57", &(sa.sin_addr)); // IPv4
+inet_pton(AF_INET6, "2001:db8:63b3:1::3490", &(sa6.sin6_addr)); // IPv6
 
 ```
