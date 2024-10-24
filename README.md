@@ -105,3 +105,20 @@ inet_pton(AF_INET, "10.12.110.57", &(sa.sin_addr)); // IPv4
 inet_pton(AF_INET6, "2001:db8:63b3:1::3490", &(sa6.sin6_addr)); // IPv6
 
 ```
+
+## System Calls
+
+- fonctions calls, the kernel takes care of that
+
+### getaddrinfo()
+
+- used to perform DNS lookup and fill the result in the "struct addrinfo"
+- definition
+
+```
+int getaddrinfo(const char *node,     // e.g. "www.example.com" or IP
+                const char *service,  // e.g. "http" or port number
+                const struct addrinfo *hints,
+                struct addrinfo **res);
+
+```
