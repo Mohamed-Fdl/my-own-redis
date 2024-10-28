@@ -122,3 +122,56 @@ int getaddrinfo(const char *node,     // e.g. "www.example.com" or IP
                 struct addrinfo **res);
 
 ```
+
+### socket()
+
+- used to get file descriptor
+- definition
+
+```
+int socket(int domain, int type, int protocol);
+
+```
+
+### bind()
+
+- associate the created socket file descriptor with an IP and PORT number
+- definition
+
+```
+int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
+
+```
+
+### connect()
+
+- used by the client to conect to a specific host on a specific port
+- definition
+
+```
+int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
+
+```
+
+### listen()
+
+- used by the server to handle incoming connections from client
+- definition
+
+```
+int listen(int sockfd, int backlog);
+```
+### accept()
+
+- used by the server accept a new connection froom client, this return a new file descriptor for this specific connection with client
+- definition
+
+```
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen); 
+```
+
+getaddrinfo();
+socket();
+bind();
+listen();
+/_ accept() goes here _/
