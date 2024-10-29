@@ -161,17 +161,106 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
 ```
 int listen(int sockfd, int backlog);
 ```
+
 ### accept()
 
 - used by the server accept a new connection froom client, this return a new file descriptor for this specific connection with client
 - definition
 
 ```
-int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen); 
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
 ```
 
+### send() & recv()
+
+- used by the server or client to communicate via a stream socket
+- definition
+
+```
+int send(int sockfd, const void *msg, int len, int flags);
+
+int recv(int sockfd, void *buf, int len, int flags);
+
+```
+
+- from the server perspective, these are the system calls to get file descriptor and communicate with client:
+
+```
 getaddrinfo();
 socket();
 bind();
 listen();
-/_ accept() goes here _/
+accept();
+```
+
+- from the client perspective, these are the system calls to get file descriptor and communicate with server:
+
+```
+getaddrinfo();
+socket();
+connect();
+```
+
+### sendto() & recvfrom()
+
+- used by the server or client to communicate via a datagram socket
+- since datagram sockets use UDP and UDP is connectionless, when we want to send UDP datagram, we need to specify the destination IP and PORT with a strcture: sockaddr_in, or sockaddr_in6
+- definition
+
+```
+int sendto(int sockfd, const void *msg, int len, unsigned int flags, const struct sockaddr *to, socklen_t tolen);
+int recvfrom(int sockfd, void *buf, int len, unsigned int flags, struct sockaddr *from, int *fromlen);
+
+```
+
+- from the server perspective, these are the system calls to get file descriptor and communicate with client:
+
+```
+getaddrinfo();
+socket();
+bind();
+listen();
+accept();
+
+```
+
+- from the client perspective, these are the system calls to get file descriptor and communicate with server:
+
+```
+getaddrinfo();
+socket();
+connect();
+
+```
+
+### close() and shutdown()
+
+- close is use to close the connection, so that recv() and send() are not allowed, it takes the socket file descriptor
+- shutdown also allow to change the socket file descriptor usability not close it, so we specify the socket file descriptor and the way we want to change the socket usage
+
+```
+close(sockfd);
+int shutdown(int sockfd, int how);
+
+```
+
+### getpeername()
+
+- get informations about the other side, ip adress and port
+
+```
+int getpeername(int sockfd, struct sockaddr *addr, int *addrlen);
+
+```
+
+### gethostname()
+
+- get the name of the local machine on which our program is running
+
+```
+int gethostname(char *hostname, size_t size);
+
+```
+
+## Client-Server Background
