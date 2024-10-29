@@ -264,3 +264,12 @@ int gethostname(char *hostname, size_t size);
 ```
 
 ## Client-Server Background
+
+
+```mermaid
+  sequenceDiagram
+    Client->>Server: Request
+    alt
+    Server->>Client: Response
+    end
+```
