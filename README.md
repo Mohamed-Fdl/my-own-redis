@@ -265,7 +265,6 @@ int gethostname(char *hostname, size_t size);
 
 ## Client-Server Background
 
-
 ```mermaid
   sequenceDiagram
     Client->>Server: Request
@@ -273,3 +272,7 @@ int gethostname(char *hostname, size_t size);
     Server->>Client: Response
     end
 ```
+
+## Adva,ced Techniques
+
+### Blocking
