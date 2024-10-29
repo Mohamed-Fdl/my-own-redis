@@ -273,6 +273,23 @@ int gethostname(char *hostname, size_t size);
     end
 ```
 
-## Adva,ced Techniques
+## Advanced Techniques
 
 ### Blocking
+
+- some system class like accept() or recv() blocks when there is no connection in backlog queue or no data to receive
+- we can make the socket non-blocking by using fcntl()
+
+```
+sockfd = socket(PF_INET, SOCK_STREAM, 0);
+fcntl(sockfd, F_SETFL, O_NONBLOCK);
+
+```
+
+- when we call for example recv() and there is no data, the call won't block but it will return -1 and errno will be set to EWOULDBLOCK or EAGAIN
+
+### Synchronous I/O multiplexing
+
+- we have to monitor a bunches of sockets and handles the ones that have data ready
+- so to avoid polling, we use the poll() syscall, we the kernel let us know when data is ready on a specific socket
+- the poll() syscall takes an array of socket file descriptors that we want to monitor
