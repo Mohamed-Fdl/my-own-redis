@@ -236,7 +236,7 @@ connect();
 
 ### close() and shutdown()
 
-- close is use to close the connection, so that recv() and send() are not allowed, it takes the socket file descriptor
+- close is use to close the connection, so that recv() and send() are not allowed, it takes the socket file descriptor, internally is a recv() of 0
 - shutdown also allow to change the socket file descriptor usability not close it, so we specify the socket file descriptor and the way we want to change the socket usage
 
 ```
@@ -290,6 +290,14 @@ fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
 ### Synchronous I/O multiplexing
 
+#### Poll()
+
 - we have to monitor a bunches of sockets and handles the ones that have data ready
 - so to avoid polling, we use the poll() syscall, we the kernel let us know when data is ready on a specific socket
 - the poll() syscall takes an array of socket file descriptors that we want to monitor
+- with tons of connections it is more useful to use an event library as libevent
+
+#### Select()
+
+- we can monitor several sockets with the select() syscall, so we can handle reading, writing and error
+- with tons of connections it is more useful to use an event library as libevent
