@@ -301,3 +301,38 @@ fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
 - we can monitor several sockets with the select() syscall, so we can handle reading, writing and error
 - with tons of connections it is more useful to use an event library as libevent
+
+#### Handling Partial send()s
+
+```
+#include <sys/types.h>
+#include <sys/socket.h>
+
+int sendall(int s, char *buf, int *len)
+{
+    int total = 0;        // how many bytes we've sent
+    int bytesleft = *len; // how many we have left to send
+    int n;
+
+    while(total < *len) {
+        n = send(s, buf+total, bytesleft, 0);
+        if (n == -1) { break; }
+        total += n;
+        bytesleft -= n;
+    }
+
+    *len = total; // return number actually sent here
+
+    return n==-1?-1:0; // return -1 on failure, 0 on success
+}
+
+```
+
+#### Data Serialization
+- how to send multiple types values across the wire, by doing serialization: encode the data in a binary portable form.The receiver will decode it
+- they are framework for doing the serialization
+- packing data in a known binery format
+- it is not accurate to pack structs and send them because the compiler is free to add padding bytes
+- the best way to deal with this is to send each field independently by packing them and unpacking them in the other side 
+- In any case, encoding the data somehow or another before you send it is the right way of doing things!
+- see proto buf implementations
