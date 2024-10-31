@@ -336,3 +336,10 @@ int sendall(int s, char *buf, int *len)
 - the best way to deal with this is to send each field independently by packing them and unpacking them in the other side 
 - In any case, encoding the data somehow or another before you send it is the right way of doing things!
 - see proto buf implementations
+
+#### Data Encapsulation
+- the manner of putting headers, content length or both so that the data transmitted is in a well know format by server and clients
+- so after defining how the data will be formated (defining the protocol), we must send the data to the other part with a function like sendall()
+- the other side need to call recv() over and over until all data is received
+- that is why client and server must agree on the protocol definition
+
