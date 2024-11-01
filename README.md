@@ -293,7 +293,7 @@ fcntl(sockfd, F_SETFL, O_NONBLOCK);
 #### Poll()
 
 - we have to monitor a bunches of sockets and handles the ones that have data ready
-- so to avoid polling, we use the poll() syscall, we the kernel let us know when data is ready on a specific socket
+- so to avoid polling, we use the poll() syscall, we let the kernel let us know when data is ready on a specific socket
 - the poll() syscall takes an array of socket file descriptors that we want to monitor
 - with tons of connections it is more useful to use an event library as libevent
 
@@ -329,17 +329,29 @@ int sendall(int s, char *buf, int *len)
 ```
 
 #### Data Serialization
+
 - how to send multiple types values across the wire, by doing serialization: encode the data in a binary portable form.The receiver will decode it
 - they are framework for doing the serialization
-- packing data in a known binery format
+- packing data in a known binary format
 - it is not accurate to pack structs and send them because the compiler is free to add padding bytes
-- the best way to deal with this is to send each field independently by packing them and unpacking them in the other side 
+- the best way to deal with this is to send each field independently by packing them and unpacking them in the other side
 - In any case, encoding the data somehow or another before you send it is the right way of doing things!
 - see proto buf implementations
 
 #### Data Encapsulation
-- the manner of putting headers, content length or both so that the data transmitted is in a well know format by server and clients
+
+- the manner of putting headers, content length or both so that the data transmitted is in a well know format or form by server and clients
 - so after defining how the data will be formated (defining the protocol), we must send the data to the other part with a function like sendall()
 - the other side need to call recv() over and over until all data is received
 - that is why client and server must agree on the protocol definition
 
+#### Broadcast Packets
+
+- we can broadcast packets to multiple host with UDP (only UDP)
+- we have to use this option when creating the socket : SO_BROADCAST
+- we can send the data to a specific subnet’s broadcast address
+- or send the data to the “global” broadcast address. This is 255.255.255.255, aka INADDR_BROADCAST
+
+### Data transmission in practice
+
+- we compress, after that we encrypt and then we send the data
