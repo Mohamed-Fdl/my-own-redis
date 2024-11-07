@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #define PORT 1234
 #define HOST_ADRESS 0
@@ -21,6 +23,7 @@ static void processing(int connfd);
 static int32_t one_request(int connfd);
 static int32_t write_all(int fd, char *buf, size_t n);
 static int32_t read_full(int fd, char *buf, size_t n);
+static void fd_set_nb(int fd);
 
 int main(void)
 {
@@ -195,4 +198,25 @@ static int32_t one_request(int connfd)
     memcpy(&wbuf[4], reply, len);
 
     return write_all(connfd, wbuf, 4 + len);
+}
+
+static void fd_set_nb(int fd)
+{
+    errno = 0;
+    int flags = fcntl(fd, F_GETFL);
+    if (errno)
+    {
+        die("fcntl error");
+        return;
+    }
+
+    flags |= O_NONBLOCK;
+    errno = 0;
+
+    (void)fcntl(fd, F_SETFL, flags);
+    if (errno)
+    {
+        die("fcntl error");
+        return;
+    }
 }
