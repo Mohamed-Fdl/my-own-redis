@@ -15,11 +15,12 @@
 #define NO 0
 #define K_MAX_MSG 4096
 
-static void die(char *msg);
-static void errmsg(char *msg);
+static void die(const char *msg);
+static void errmsg(const char *msg);
 static int32_t write_all(int fd, char *buf, size_t n);
 static int32_t read_full(int fd, char *buf, size_t n);
-static int32_t query(int fd, char *text);
+static int32_t send_req(int fd, const char *text);
+static int32_t read_res(int fd);
 
 int main(void)
 {
@@ -45,36 +46,39 @@ int main(void)
         die("connect()");
     }
 
-    int32_t err = query(fd, "hello1");
-    if (err)
+    const char *query_list[3] = {"hello1", "hello2", "hello3"};
+
+    for (size_t i = 0; i < 3; i++)
     {
-        goto L_DONE;
+        int err = send_req(fd, query_list[i]);
+        if (err)
+        {
+            goto L_DONE;
+        }
     }
 
-    err = query(fd, "hello2");
-    if (err)
+    for (size_t i = 0; i < 3; i++)
     {
-        goto L_DONE;
-    }
-
-    err = query(fd, "hello3");
-    if (err)
-    {
-        goto L_DONE;
+        int err = read_res(fd);
+        if (err)
+        {
+            goto L_DONE;
+        }
     }
 
 L_DONE:
+    printf("About closing the connection...\n");
     close(fd);
     return 0;
 }
 
-static void errmsg(char *msg)
+static void errmsg(const char *msg)
 {
     fprintf(stderr, "[ERROR]: %s\n", msg);
     return;
 }
 
-static void die(char *msg)
+static void die(const char *msg)
 {
     int err = errno;
     fprintf(stderr, "[ERROR]: [%d] %s\n", err, msg);
@@ -119,29 +123,27 @@ static int32_t write_all(int fd, char *buf, size_t n)
     return 0;
 }
 
-static int32_t query(int fd, char *text)
+static int32_t send_req(int fd, const char *text)
 {
     uint32_t len = (uint32_t)strlen(text);
     if (len > K_MAX_MSG)
     {
-        errmsg("Request too long");
         return -1;
     }
-    char wbuf[4 + len];
 
+    char wbuf[4 + K_MAX_MSG];
     memcpy(wbuf, &len, 4);
     memcpy(&wbuf[4], text, len);
 
-    uint32_t err = write_all(fd, wbuf, 4 + len);
+    return write_all(fd, wbuf, 4 + len);
+}
 
-    if (err)
-    {
-        return err;
-    }
-
+static int32_t read_res(int fd)
+{
+    // 4 bytes header
     char rbuf[4 + K_MAX_MSG + 1];
     errno = 0;
-    err = read_full(fd, rbuf, 4);
+    int32_t err = read_full(fd, rbuf, 4);
     if (err)
     {
         if (errno == 0)
@@ -154,12 +156,15 @@ static int32_t query(int fd, char *text)
         }
         return err;
     }
+
+    uint32_t len = 0;
     memcpy(&len, rbuf, 4); // assume little endian
     if (len > K_MAX_MSG)
     {
         errmsg("too long");
         return -1;
     }
+
     // reply body
     err = read_full(fd, &rbuf[4], len);
     if (err)
@@ -167,6 +172,7 @@ static int32_t query(int fd, char *text)
         errmsg("read() error");
         return err;
     }
+
     // do something
     rbuf[4 + len] = '\0';
     printf("server says: %s\n", &rbuf[4]);

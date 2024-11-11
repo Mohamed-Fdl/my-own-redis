@@ -40,8 +40,8 @@ bottom
 
 ## The Event Loop & Nonblocking I/O
 
-- 03 three ways to deal with concurrent connection: spin up new thread, spin up a new process and perform non blocking IO
-- with non blocking, we get get the ready fide descriptors and do the corresponding work
-- in non blocking mode, calls like accept() read() write() return EAGAIN (not ready) instead of blocking
+- 03 three ways to deal with concurrent connections: spin up new thread, spin up a new process and perform non blocking IO
+- with non blocking, we get get the ready to use file descriptors and do the corresponding work
+- in non blocking mode, calls like accept() read() write() return error EAGAIN (not ready) instead of blocking
 - to set a file descriptor non blocking, we use the fcntl() syscall
-- use the poll() systel call to perform non blocking IO on file descriptors
+- use the poll() system call to perform non blocking IO on file descriptors
