@@ -45,3 +45,21 @@ bottom
 - in non blocking mode, calls like accept() read() write() return error EAGAIN (not ready) instead of blocking
 - to set a file descriptor non blocking, we use the fcntl() syscall
 - use the poll() system call to perform non blocking IO on file descriptors
+
+
+## Basic Server Cmd
+
+- the protocol describing the command format
+```
++------+-----+------+-----+------+-----+-----+------+
+| nstr | len | str1 | len | str2 | ... | len | strn |
++------+-----+------+-----+------+-----+-----+------+
+```
+- nstr is the number of strings in the command, len is the length of the following string
+- the response is 
+```
++----------+---------+
+| res_code | data... |
++----------+---------+
+```
+- res_code is a 32 bit integer giving the status of the response

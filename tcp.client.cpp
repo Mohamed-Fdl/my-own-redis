@@ -8,6 +8,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <assert.h>
+#include <vector>
+#include <map>
+#include <string>
 
 #define SERVER_PORT 1234
 #define SERVER_HOST_ADRESS INADDR_LOOPBACK
@@ -19,10 +22,10 @@ static void die(const char *msg);
 static void errmsg(const char *msg);
 static int32_t write_all(int fd, char *buf, size_t n);
 static int32_t read_full(int fd, char *buf, size_t n);
-static int32_t send_req(int fd, const char *text);
+static int32_t send_req(int fd, const std::vector<std::string> &cmd);
 static int32_t read_res(int fd);
 
-int main(void)
+int main(int argc, char **argv)
 {
     // socket file descriptor created: ipv4, tcp
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -39,31 +42,31 @@ int main(void)
     addr.sin_port = ntohs(SERVER_PORT);
     addr.sin_addr.s_addr = ntohl(SERVER_HOST_ADRESS);
 
-    int rv = connect(fd, (struct sockaddr *)&addr, sizeof(addr));
+    int rv = connect(fd, (const struct sockaddr *)&addr, sizeof(addr));
 
     if (rv)
     {
         die("connect()");
     }
 
-    const char *query_list[3] = {"hello1", "hello2", "hello3"};
-
-    for (size_t i = 0; i < 3; i++)
+    std::vector<std::string> cmd;
+    for (int i = 1; i < argc; ++i)
     {
-        int err = send_req(fd, query_list[i]);
-        if (err)
-        {
-            goto L_DONE;
-        }
+        cmd.push_back(argv[i]);
     }
 
-    for (size_t i = 0; i < 3; i++)
+    int err = send_req(fd, cmd);
+    if (err)
     {
-        int err = read_res(fd);
-        if (err)
-        {
-            goto L_DONE;
-        }
+        printf("err %i", err);
+        goto L_DONE;
+    }
+
+    err = read_res(fd);
+    if (err)
+    {
+        printf("err %i", err);
+        goto L_DONE;
     }
 
 L_DONE:
@@ -123,17 +126,33 @@ static int32_t write_all(int fd, char *buf, size_t n)
     return 0;
 }
 
-static int32_t send_req(int fd, const char *text)
+static int32_t send_req(int fd, const std::vector<std::string> &cmd)
 {
-    uint32_t len = (uint32_t)strlen(text);
+    uint32_t len = 4;
+    for (const std::string &s : cmd)
+    {
+        len += 4 + s.size();
+    }
+
     if (len > K_MAX_MSG)
     {
         return -1;
     }
 
     char wbuf[4 + K_MAX_MSG];
-    memcpy(wbuf, &len, 4);
-    memcpy(&wbuf[4], text, len);
+    memcpy(&wbuf[0], &len, 4);
+    uint32_t n = cmd.size();
+    memcpy(&wbuf[4], &n, 4);
+
+    size_t cur = 4 + 4;
+
+    for (const std::string &s : cmd)
+    {
+        uint32_t p = (uint32_t)s.size();
+        memcpy(&wbuf[cur], &p, 4);
+        memcpy(&wbuf[cur + 4], s.data(), s.size());
+        cur += 4 + s.size();
+    }
 
     return write_all(fd, wbuf, 4 + len);
 }
@@ -173,8 +192,15 @@ static int32_t read_res(int fd)
         return err;
     }
 
+    uint32_t rescode = 0;
+    if (len < 4)
+    {
+        errmsg("bad response");
+        return -1;
+    }
+
     // do something
-    rbuf[4 + len] = '\0';
-    printf("server says: %s\n", &rbuf[4]);
+    memcpy(&rescode, &rbuf[4], 4);
+    printf("Server says: [%u], %.*s\n", rescode, len - 4, &rbuf[4 + 4]);
     return 0;
 }
