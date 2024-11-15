@@ -63,3 +63,9 @@ bottom
 +----------+---------+
 ```
 - res_code is a 32 bit integer giving the status of the response
+
+## Data Structure: Hashtables
+
+- lookup in constant runtime O(1)
+- two types of hashtables: open adressing & chaining
+- open adressing is more CPU cache friendly
