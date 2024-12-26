@@ -69,3 +69,5 @@ bottom
 - lookup in constant runtime O(1)
 - two types of hashtables: open adressing & chaining
 - open adressing is more CPU cache friendly
+
+## Data Serialization & Deserialization
