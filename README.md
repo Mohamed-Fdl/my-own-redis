@@ -71,3 +71,5 @@ bottom
 - open adressing is more CPU cache friendly
 
 ## Data Serialization & Deserialization
+
+- Find a general way to handle multiple data types

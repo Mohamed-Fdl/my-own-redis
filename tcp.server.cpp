@@ -69,7 +69,6 @@ struct Entry
     std::string val;
 };
 
-static std::map<std::string, std::string> g_map;
 
 static void die(const char *msg);
 static void errmsg(const char *msg);
