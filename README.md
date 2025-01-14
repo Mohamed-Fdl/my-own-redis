@@ -46,22 +46,25 @@ bottom
 - to set a file descriptor non blocking, we use the fcntl() syscall
 - use the poll() system call to perform non blocking IO on file descriptors
 
-
 ## Basic Server Cmd
 
 - the protocol describing the command format
+
 ```
 +------+-----+------+-----+------+-----+-----+------+
 | nstr | len | str1 | len | str2 | ... | len | strn |
 +------+-----+------+-----+------+-----+-----+------+
 ```
+
 - nstr is the number of strings in the command, len is the length of the following string
-- the response is 
+- the response is
+
 ```
 +----------+---------+
 | res_code | data... |
 +----------+---------+
 ```
+
 - res_code is a 32 bit integer giving the status of the response
 
 ## Data Structure: Hashtables
@@ -73,3 +76,5 @@ bottom
 ## Data Serialization & Deserialization
 
 - Find a general way to handle multiple data types
+- We use TLV binary format: Type-Length-Value
+- Type is an enum of integers and is encoded as 1byte, length is 4 bytes and value have variable length
