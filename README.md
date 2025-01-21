@@ -78,3 +78,17 @@ bottom
 - Find a general way to handle multiple data types
 - We use TLV binary format: Type-Length-Value
 - Type is an enum of integers and is encoded as 1byte, length is 4 bytes and value have variable length
+
+## AVL TREES
+
+- Sorted set is a collection of pair (score,name) indexed in 2 ways:
+  - Find score by name
+  - Get a subset of sorted pairs
+    - Seek to the closest pair from a tzrget 
+    - Iterate from ascending or descending order to the starting point
+- Rank queries
+  - Get a pair's rank
+  - Get a pair by its rank
+- Trees are hierarchical and recursive.A node tree divides the dataset into non-overlaping subtrees that is how data is sorted
+- AVL Tree are binary trees with extra steps: the heignt difference between right and left node is at most 1
+- Rotations are used to keep order
