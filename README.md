@@ -84,7 +84,7 @@ bottom
 - Sorted set is a collection of pair (score,name) indexed in 2 ways:
   - Find score by name
   - Get a subset of sorted pairs
-    - Seek to the closest pair from a tzrget 
+    - Seek to the closest pair from a tzrget
     - Iterate from ascending or descending order to the starting point
 - Rank queries
   - Get a pair's rank
@@ -92,3 +92,19 @@ bottom
 - Trees are hierarchical and recursive.A node tree divides the dataset into non-overlaping subtrees that is how data is sorted
 - AVL Tree are binary trees with extra steps: the heignt difference between right and left node is at most 1
 - Rotations are used to keep order
+
+## Build Client & Server binary
+
+```
+g++ -Wall -Wextra -O2 -g server.cpp -g hashtable.cpp -o server.out
+
+g++ -Wall -Wextra -O2 -g client.cpp -o client.out
+```
+
+## Basic commands
+
+```
+client.out set x y
+client.out get x => output y
+client.out del x
+```
