@@ -104,8 +104,10 @@ g++ -Wall -Wextra -O2 -g client.cpp -o client.out
 ## Basic commands
 
 ```
+# Run the server
 ./server.out
 
+# Client basics commands
 client.out set x y
 client.out get x => output y
 client.out del x
