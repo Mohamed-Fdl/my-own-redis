@@ -31,8 +31,8 @@ client.out set x y
 # setting value
 client.out set x y
 
-# getting value
-client.out get x => outputs y
+# getting value (outputs y)
+client.out get x
 
 # deleting value
 client.out del x
