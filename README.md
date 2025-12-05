@@ -1,4 +1,5 @@
 # Build my own Redis step by step
+My own implementation of the an in-memory database like Redis.Both server and client are written in cpp.
 
 ## Client-Server Background
 
