@@ -10,6 +10,10 @@ My own implementation of the an in-memory database like Redis.Both server and cl
 Make sure you have the g++ compiler
 
 ```bash
+# get project
+git clone https://github.com/Mohamed-Fdl/my-own-redis.git
+cd cd my-own-redis
+
 # build the client and server
 g++ -Wall -Wextra -O2 -g server.cpp -g hashtable.cpp -o server.out
 g++ -Wall -Wextra -O2 -g client.cpp -o client.out
