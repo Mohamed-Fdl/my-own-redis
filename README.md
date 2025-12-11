@@ -9,6 +9,9 @@ My own implementation of the an in-memory database like Redis.Both server and cl
 ## Quick Start
 Make sure you have the g++ compiler
 
+![Demo Server Gif](/demo-server.gif)
+![Demo Client Gif](/demo-client.gif)
+
 ```bash
 # get project
 git clone https://github.com/Mohamed-Fdl/my-own-redis.git
@@ -19,7 +22,7 @@ g++ -Wall -Wextra -O2 -g server.cpp -g hashtable.cpp -o server.out
 g++ -Wall -Wextra -O2 -g client.cpp -o client.out
 
 # Run the server
-./server.out
+server.out
 
 # Client basics commands
 client.out set x y
@@ -30,7 +33,7 @@ client.out set x y
 
 ```bash
 # Run the server
-./server.out
+server.out
 
 # setting value
 client.out set x y
